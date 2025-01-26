@@ -81,7 +81,7 @@ vim.g.have_nerd_font = false
 --
 --
 --
---  HERE ARE MY PERSON TEMPLATES !!!!!!
+--- NOTE: -  HERE ARE MY PERSON TEMPLATES !!!!!!
 
 -- Function to create a new file from the template
 function create_cpp_template(filename)
@@ -113,11 +113,26 @@ end, {
   nargs = '?', -- Allows the command to optionally take a filename as an argument
 })
 
--- END OF PERSONAL TEMPLATES
+--- NOTE: - END OF PERSONAL TEMPLATES
 --
 --
+-- NOTE: HERE ARE SOME PERSONAL SETTINGS, TABS SHOULD BE 4 SPACES!!!
+--
+-- Set tab width to 4 spaces
+vim.opt.tabstop = 4 -- Number of spaces for a tab
+vim.opt.shiftwidth = 4 -- Number of spaces for autoindent
+vim.opt.expandtab = true -- Convert tabs to spaces
 
+-- Optional: Ensure consistency when pasting code or opening files
+vim.opt.smarttab = true -- Tab behavior when editing
+vim.opt.autoindent = true -- Auto-indent new lines
+vim.opt.smartindent = true -- Smart indentation for code
 -- Make line numbers default
+--
+--  NOTE: HERE IS THE END OF MY PERSONAL CHANGES, THE REST IS TEMPLATES
+--
+--
+--
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
