@@ -1,25 +1,4 @@
 --[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
 What is Kickstart?
 
   Kickstart.nvim is *not* a distribution.
@@ -97,6 +76,46 @@ vim.g.have_nerd_font = false
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+--
+--
+--
+--
+--
+--  HERE ARE MY PERSON TEMPLATES !!!!!!
+
+-- Function to create a new file from the template
+function create_cpp_template(filename)
+  -- Define the path to your template file
+  local template_path = vim.fn.stdpath 'config' .. '/coding_templates/cpp_comp_coding_template.cpp'
+
+  -- Read the content of the template file
+  local template_file = io.open(template_path, 'r')
+  if not template_file then
+    print 'Error: Template file not found!'
+    return
+  end
+  local template_content = template_file:read '*all'
+  template_file:close()
+
+  -- Open the new file
+  vim.cmd('e ' .. filename)
+
+  -- Insert the template content into the new file
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(template_content, '\n'))
+end
+
+-- Create the custom Neovim command 'NewCppFile'
+vim.api.nvim_create_user_command('NewCppFile', function(opts)
+  -- opts.args will contain the filename passed to the command
+  local filename = opts.args or 'new_file.cpp' -- Default filename if not provided
+  create_cpp_template(filename)
+end, {
+  nargs = '?', -- Allows the command to optionally take a filename as an argument
+})
+
+-- END OF PERSONAL TEMPLATES
+--
+--
 
 -- Make line numbers default
 vim.opt.number = true
