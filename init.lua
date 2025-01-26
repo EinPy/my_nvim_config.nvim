@@ -129,6 +129,18 @@ vim.opt.autoindent = true -- Auto-indent new lines
 vim.opt.smartindent = true -- Smart indentation for code
 -- Make line numbers default
 --
+--
+--
+---- Auto-indent for C++ loops
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'cpp',
+  callback = function()
+    vim.bo.smartindent = true
+    vim.bo.cindent = true
+    vim.bo.autoindent = true
+  end,
+})
+
 --  NOTE: HERE IS THE END OF MY PERSONAL CHANGES, THE REST IS TEMPLATES
 --
 --
