@@ -16,6 +16,7 @@ return {
   opts = {
     filesystem = {
       window = {
+        position = 'right', --set to open on right side of screen
         mappings = {
           ['\\'] = 'close_window',
         },
