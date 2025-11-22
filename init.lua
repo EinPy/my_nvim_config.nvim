@@ -678,12 +678,8 @@ require('lazy').setup({
               configuration = {
                 runtimes = {
                   {
-                    name = 'JavaSE-17',
-                    path = '/usr/lib/jvm/java-17-openjdk-amd64',
-                  },
-                  {
-                    name = 'JavaSE-1.8',
-                    path = '/usr/lib/jvm/java-8-openjdk-amd64',
+                    name = 'JavaSE-21',
+                    path = '/usr/lib/jvm/java-1.21.0-openjdk-amd64',
                   },
                 },
               },
@@ -746,6 +742,28 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+
+      -- Configure clangd LSP
+      require('lspconfig').clangd.setup{
+        capabilities = capabilities,
+        cmd = { 
+          "clangd",
+          "--compile-commands-dir=" .. vim.fn.getcwd(),  -- Point to current directory
+          "--header-insertion=never",
+          "--header-insertion-decorators=0",
+          "--query-driver=/usr/bin/gcc,/usr/bin/mpicc"
+        },
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+        root_dir = function(fname)
+          -- Look for compile_commands.json in the same directory as the source file
+          local source_dir = vim.fn.fnamemodify(fname, ':h')
+          return require('lspconfig').util.root_pattern(
+            'compile_commands.json',
+            '.clangd',
+            '.git'
+          )(fname) or source_dir
+        end,
       }
     end,
   },
@@ -1038,3 +1056,13 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'java',
+  callback = function()
+    vim.b.sleuth_automatic = 0  -- Disable sleuth for Java files
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    vim.bo.expandtab = true
+  end,
+})
