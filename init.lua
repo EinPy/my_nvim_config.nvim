@@ -745,24 +745,20 @@ require('lazy').setup({
       }
 
       -- Configure clangd LSP
-      require('lspconfig').clangd.setup{
+      require('lspconfig').clangd.setup {
         capabilities = capabilities,
-        cmd = { 
-          "clangd",
-          "--compile-commands-dir=" .. vim.fn.getcwd(),  -- Point to current directory
-          "--header-insertion=never",
-          "--header-insertion-decorators=0",
-          "--query-driver=/usr/bin/gcc,/usr/bin/mpicc"
+        cmd = {
+          'clangd',
+          '--compile-commands-dir=' .. vim.fn.getcwd(), -- Point to current directory
+          '--header-insertion=never',
+          '--header-insertion-decorators=0',
+          '--query-driver=/usr/bin/gcc,/usr/bin/mpicc',
         },
-        filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
         root_dir = function(fname)
           -- Look for compile_commands.json in the same directory as the source file
           local source_dir = vim.fn.fnamemodify(fname, ':h')
-          return require('lspconfig').util.root_pattern(
-            'compile_commands.json',
-            '.clangd',
-            '.git'
-          )(fname) or source_dir
+          return require('lspconfig').util.root_pattern('compile_commands.json', '.clangd', '.git')(fname) or source_dir
         end,
       }
     end,
@@ -785,9 +781,7 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
+        -- For C/C++, do NOT use LSP formatting, only concrete formatters (clang-format)
         local disable_filetypes = { c = true, cpp = true }
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
@@ -802,11 +796,9 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        -- NEW: clang-format for C / C++
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
       },
     },
   },
@@ -1060,7 +1052,7 @@ require('lazy').setup({
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'java',
   callback = function()
-    vim.b.sleuth_automatic = 0  -- Disable sleuth for Java files
+    vim.b.sleuth_automatic = 0 -- Disable sleuth for Java files
     vim.bo.tabstop = 4
     vim.bo.shiftwidth = 4
     vim.bo.expandtab = true
